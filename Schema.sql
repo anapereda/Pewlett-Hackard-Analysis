@@ -1,6 +1,6 @@
 -- Creating tables for PH-EmployeeDB
 CREATE TABLE departments (
-     dept_no VARCHAR(4) NOT NULL,
+     dept_no VARCHAR NOT NULL,
      dept_name VARCHAR(40) NOT NULL,
      PRIMARY KEY (dept_no),
      UNIQUE (dept_name)
@@ -11,9 +11,12 @@ CREATE TABLE employees(
 	bith_date DATE NOT NULL, 
 	first_name VARCHAR NOT NULL, 
 	last_name VARCHAR NOT NULL,
+	gender VARCHAR NOT NULL,
 	hire_date DATE NOT NULL,
 	PRIMARY KEY (emp_no)
 );
+
+DROP TABLE employees CASCADE;
 
 CREATE TABLE dept_manager (
 dept_no VARCHAR(4) NOT NULL,
@@ -36,7 +39,7 @@ CREATE TABLE salaries (
 
 CREATE TABLE dept_employee (
 	emp_no INT NOT NULL, 
-	dept_no VARCHAR (40) NOT NULL, 
+	dept_no VARCHAR NOT NULL, 
 	from_date DATE NOT NULL,
 	to_date DATE NOT NULL,
 	FOREIGN KEY (emp_no) REFERENCES employees(emp_no),
@@ -52,4 +55,61 @@ CREATE TABLE titles(
 	FOREIGN KEY (emp_no) REFERENCES employees (emp_no),
 	PRIMARY KEY (emp_no, title, from_date)
 );	
-)
+
+DROP TABLE departments CASCADE;
+DROP TABLE dept_employee CASCADE;
+
+
+SELECT * FROM departments;
+
+COPY departments from '/Users/anitapereda/Public/departments.csv' DELIMITER ',' CSV HEADER;
+
+COPY employees from '/Users/anitapereda/Public/employees.csv' DELIMITER ',' CSV HEADER;
+
+COPY dept_employee from '/Users/anitapereda/Public/dept_emp.csv' DELIMITER ',' CSV HEADER;
+
+
+COPY dept_manager from '/Users/anitapereda/Public/dept_manager.csv' DELIMITER ',' CSV HEADER;
+COPY salaries from '/Users/anitapereda/Public/salaries.csv' DELIMITER ',' CSV HEADER;
+COPY titles from '/Users/anitapereda/Public/titles.csv' DELIMITER ',' CSV HEADER;
+
+SELECT * FROM departments;
+
+-- Data analysis 
+
+SELECT first_name, last_name
+FROM employees
+WHERE bith_date BETWEEN '1952-01-01' AND '1955-12-31';
+
+SELECT first_name, last_name
+FROM employees
+WHERE bith_date BETWEEN '1952-01-01' AND '1952-12-31';
+
+SELECT first_name, last_name
+FROM employees
+WHERE bith_date BETWEEN '1953-01-01' AND '1953-12-31';
+
+SELECT first_name, last_name
+FROM employees
+WHERE bith_date BETWEEN '1954-01-01' AND '1954-12-31';
+
+SELECT first_name, last_name
+FROM employees
+WHERE bith_date BETWEEN '1955-01-01' AND '1955-12-31';
+
+--Narrow the search for retirement eligibility
+--count the number of rows inthe query
+SELECT COUNT(first_name)
+FROM employees
+WHERE (bith_date BETWEEN '1952-01-01' AND '1955-12-31')
+AND (hire_date BETWEEN '1985-01-01' AND '1988-12-31');
+
+--save your new search into a table
+SELECT first_name, last_name
+INTO retirement_info
+FROM employees
+WHERE (bith_date BETWEEN '1952-01-01' AND '1955-12-31')
+AND (hire_date BETWEEN '1985-01-01' AND '1988-12-31');
+
+COPY retirement_info TO '/Users/anitapereda/Public/retirement_info.csv' DELIMITER ',' CSV HEADER;
+
