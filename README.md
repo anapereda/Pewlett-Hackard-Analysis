@@ -7,6 +7,7 @@ The first step was to create a physical ERD (Entity Relational Diagram) to highl
 
 We used pgAdmin 4 and SQL as the main technological tool to build the data base called ‘PH-Employee DB’. The first step was to upload the data into pgAdmin 4 and find employees eligible for retirement; those who born between 1952 and 1955 and hired between 1985 and 1988 and created the retirement_info CSV.  With this information we could join to other tables to get other information like salaries and titles; we used inner joins to the retirement_info CSV. 
 The main challenge was to obtained the most recent data (title) for those employees who changed position throughout their career within the company. The challenge was overcome by partitioning the data and ordering by date; the latest title the data that we took and used. This is the code that we used for the second technical deliverable;   
+	
 	SELECT emp_no, first_name, last_name, 		bith_date, from_date, to_date, title
 	INTO mentorship_elegibility
 	FROM
