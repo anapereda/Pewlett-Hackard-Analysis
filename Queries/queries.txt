@@ -154,6 +154,7 @@ ON ce.emp_no = de.emp_no
 GROUP BY de.dept_no
 ORDER BY de.dept_no;
 
+
 COPY current_emp TO '/Users/anitapereda/Public/current_emp.csv' DELIMITER ',' CSV HEADER;
 
 SELECT e.emp_no, e.first_name, e.last_name, e.gender, s.salary
@@ -217,16 +218,21 @@ SELECT * FROM retirement_info;
 
 --challenge
 --Create the table 
+SELECT * FROM retirement_info;
 
-SELECT ri.emp_no, ri.first_name, ri.last_name, 
+SELECT COUNT(emp_no)
+FROM current_emp
+
+SELECT cu.emp_no, cu.first_name, cu.last_name, 
 	ti.from_date, ti.title, ti.to_date, s.salary
 INTO dup_retiring_title
-FROM retirement_info as ri
+FROM current_emp as cu
 INNER JOIN titles AS ti
-ON (ri.emp_no = ti.emp_no)
+ON (cu.emp_no = ti.emp_no)
 INNER JOIN salaries as s
-ON (ri.emp_no = s.emp_no)
+ON (cu.emp_no = s.emp_no);
 
+DROP TABLE dup_retiring_title;
 
 SELECT * FROM dup_retiring_title;
 --DELIVERABLE 1
@@ -241,6 +247,20 @@ FROM
 	FROM dup_retiring_title) tmp WHERE rn = 1 
 	ORDER BY emp_no;
 
+DROP TABLE retirement_title; 
+
+SELECT * FROM retirement_title;
+
+
+
+SELECT COUNT(rt.first_name), rt.title
+INTO employees_title_count
+FROM retirement_title as rt
+GROUP BY rt.title
+ORDER BY count;
+
+SELECT * FROM employees_title_count;
+DROP TABLE employees_title_count;
 --DELIVERABLE 2
 
 SELECT e.emp_no, e.first_name, e.last_name, e.bith_date,
@@ -266,4 +286,5 @@ FROM
 	FROM mentorship) tmp WHERE rn = 1 
 	ORDER BY emp_no;
 
-SELECT * FROM mentorship_elegibility; 
+SELECT count(first_name)
+FROM mentorship_elegibility;
